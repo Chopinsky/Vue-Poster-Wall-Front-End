@@ -10,7 +10,9 @@
       >
       </textarea>
       <div class="mt3 tr">
-        <span class="mr3 black-70">{{ charLeft() }}</span>
+        <span class="mr3 black-70" v-bind:class="{ 'light-red': underTwentyMark(), 'dark-red': underTenMark() }">
+          {{ charLeft() }}
+        </span>
         <button :disabled="isTweetable()"
                 class="button-reset bg-blue bn white f6 fw5 pv2 ph3 br2 pointer dim"
         >
@@ -33,10 +35,16 @@
         return 140
       },
       isTweetable: function () {
-        return (this.tweet.length > 0) && (this.tweet.length <= this.maxCharCount())
+        return !((this.tweet.length > 0) && (this.tweet.length <= this.maxCharCount()))
       },
       charLeft: function () {
-        return this.maxCharCount() - this.tweet.length
+        return (this.maxCharCount() - this.tweet.length)
+      },
+      underTwentyMark: function () {
+        return (this.maxCharCount() - this.tweet.length < 20) && (this.maxCharCount() - this.tweet.length >= 10)
+      },
+      underTenMark: function () {
+        return (this.maxCharCount() - this.tweet.length < 10)
       }
     }
   }
