@@ -9,8 +9,9 @@
                 placeholder="Write your tweet here"
       >
       </textarea>
-      <div class="mt3 tr">
-        <span class="mr3 black-70" v-bind:class="{ 'light-red': underTwentyMark(), 'dark-red': underTenMark() }">
+      <div class="tr">
+        <span class="mr3 black-70"
+              v-bind:class="{ 'light-red': underTwentyMark(), 'dark-red': underTenMark() }">
           {{ charLeft() }}
         </span>
         <button :disabled="isTweetable()"
@@ -53,7 +54,7 @@
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
   #divContainer {
-    margin-top: 50px;
+    margin-top: 10px;
   }
 
   button[disabled] {
