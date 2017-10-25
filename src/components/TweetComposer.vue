@@ -92,14 +92,6 @@
     opacity: 0.5;
   }
 
-  .hide {
-    clip: rect(1px, 1px, 1px, 1px);
-    height: 1px;
-    overflow: hidden;
-    position: absolute !important;
-    width: 1px;
-  }
-
   @font-face {
     font-family: 'Material Icons';
     font-style: normal;
@@ -121,5 +113,13 @@
     direction: ltr;
     -webkit-font-feature-settings: 'liga';
     -webkit-font-smoothing: antialiased;
+  }
+
+  .hide {
+    clip: rect(1px, 1px, 1px, 1px);
+    height: 1px;
+    overflow: hidden;
+    position: absolute !important;
+    width: 1px;
   }
 </style>
