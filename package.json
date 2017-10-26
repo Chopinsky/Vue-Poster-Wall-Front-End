@@ -1,7 +1,7 @@
 {
-  "name": "vueprj",
+  "name": "Scribble-Wall",
   "version": "1.0.0",
-  "description": "A Vue.js project",
+  "description": "A vue.js project that create a scribble wall open for doodling",
   "author": "Jacob Zuo <chopinsky@live.com>",
   "private": true,
   "scripts": {

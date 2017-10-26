@@ -1,17 +1,16 @@
 <template>
   <div id="divContainer" class="w-75 center ba b--black-10">
     <div class="pv2 tc bb b--black-10">
-      <h1 class="ma0 f5 normal">Compose New Tweet</h1>
+      <h1 class="ma0 f5 normal">Write On The Wall</h1>
     </div>
 
     <div class="bg-near-white pa3">
       <textarea name="tweet" v-model="tweet" rows="3"
                 class="w-100 br2 ba b--black-10 pa2"
-                placeholder="Write your tweet here"
-      >
-      </textarea>
+                placeholder="Write your thoughts here"
+      ></textarea>
 
-      <div v-if="photoHasBeenUploaded()" class="bg-black-10 pa2 flex">
+      <div v-if="photoHasBeenUploaded" class="bg-black-10 pa2 flex">
         <figure class="ma0 relative flex items-center justify-center">
           <button @click="removePhoto()" class="button-reset pointer dim bn bg-black h2 w2 br-100 white flex items-center justify-center absolute absolute--fill-l center">
             <i class="material-icons f5">close</i>
@@ -30,12 +29,10 @@
         </div>
 
         <div class="flex items-center">
-          <span class="mr3 black-70"
-                v-bind:class="{ 'light-red': underTwentyMark(), 'dark-red': underTenMark() }">
-            {{ charLeft() }}
+          <span class="mr3 black-70" v-bind:class="{ 'light-red': underTwentyMark, 'dark-red': underTenMark }">
+            {{ charLeft }}
           </span>
-          <button :disabled="isTweetable()"
-                  class="button-reset bg-blue bn white f6 fw5 pv2 ph3 br2 pointer dim"
+          <button :disabled="isTweetable" class="button-reset bg-blue bn white f6 fw5 pv2 ph3 br2 pointer dim"
           >
             Tweet
           </button>
@@ -49,31 +46,40 @@
   export default {
     data: function () {
       return {
-        tweet: ''
+        tweet: '',
+        photo: null
+      }
+    },
+    computed: {
+      underTwentyMark: function () {
+        return (this.maxCharCount() - this.tweet.length < 20) && (this.maxCharCount() - this.tweet.length >= 10)
+      },
+
+      underTenMark: function () {
+        return (this.maxCharCount() - this.tweet.length < 10)
+      },
+
+      photoHasBeenUploaded: function () {
+        return !!this.photo
+      },
+
+      isTweetable: function () {
+        return !((this.tweet.length > 0) && (this.tweet.length <= this.maxCharCount()))
+      },
+
+      charLeft: function () {
+        return (this.maxCharCount() - this.tweet.length)
       }
     },
     methods: {
       maxCharCount: function () {
         return 140
       },
-      isTweetable: function () {
-        return !((this.tweet.length > 0) && (this.tweet.length <= this.maxCharCount()))
-      },
-      charLeft: function () {
-        return (this.maxCharCount() - this.tweet.length)
-      },
-      underTwentyMark: function () {
-        return (this.maxCharCount() - this.tweet.length < 20) && (this.maxCharCount() - this.tweet.length >= 10)
-      },
-      underTenMark: function () {
-        return (this.maxCharCount() - this.tweet.length < 10)
-      },
-      photoHasBeenUploaded: function () {
-        return false
-      },
+
       handlePhotoUpload: function () {
 
       },
+
       triggerFileUpload: function () {
 
       }
