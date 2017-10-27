@@ -12,18 +12,18 @@
 
       <div v-if="photoHasBeenUploaded" class="bg-black-10 pa2 flex">
         <figure class="ma0 relative flex items-center justify-center">
-          <button @click="removePhoto()" class="button-reset pointer dim bn bg-black h2 w2 br-100 white flex items-center justify-center absolute absolute--fill-l center">
+          <button @click="removePhoto" class="button-reset btn-close pointer dim bn bg-black h2 w2 br-100 white flex items-center justify-center absolute absolute--fill-l center">
             <i class="material-icons f5">close</i>
           </button>
-          <img v-bind:src="photo" class="h3 w3" alt="Uploaded photo">
+          <img v-bind:src="photo" class="photo-img" alt="Uploaded photo">
         </figure>
       </div>
 
-      <input @change="handlePhotoUpload()" ref="photoUpload" type="file" class="hide">
+      <input @change="handlePhotoUpload" ref="photoUpload" type="file" class="hide">
 
       <div class="mt3 flex justify-between">
         <div>
-          <button @click="triggerFileUpload()" class="button-reset flex items-center br2 bn bg-transparent blue hover-bg-black-10 pointer">
+          <button @click="triggerFileUpload" class="button-reset flex items-center br2 bn bg-transparent blue hover-bg-black-10 pointer">
             <i class="material-icons f3">photo_camera</i>
           </button>
         </div>
@@ -76,12 +76,22 @@
         return 140
       },
 
-      handlePhotoUpload: function () {
+      handlePhotoUpload: function (event) {
+        var reader = new FileReader()
 
+        reader.onload = (event) => {
+          this.photo = (event.target.result)
+        }
+
+        reader.readAsDataURL(event.target.files[0])
       },
 
       triggerFileUpload: function () {
+        this.$refs.photoUpload.click()
+      },
 
+      removePhoto: function () {
+        this.photo = null
       }
     }
   }
@@ -103,6 +113,17 @@
     font-style: normal;
     font-weight: 400;
     src: url(https://fonts.gstatic.com/s/materialicons/v30/2fcrYFNaTjcS6g4U3t-Y5ZjZjT5FdEJ140U2DJYC3mY.woff2) format('woff2');
+  }
+
+  .photo-img {
+    width: 100%;
+    height: 100%;
+  }
+
+  .btn-close {
+    left: auto;
+    right: 5px;
+    top: 5px;
   }
 
   .material-icons {
