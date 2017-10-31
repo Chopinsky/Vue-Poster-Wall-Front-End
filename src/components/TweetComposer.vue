@@ -11,15 +11,15 @@
       ></textarea>
 
       <div v-if="photoHasBeenUploaded" class="bg-black-10 pa2 flex">
-        <figure class="ma0 relative flex items-center justify-center">
-          <button @click="removePhoto" class="button-reset btn-close pointer dim bn bg-black h2 w2 br-100 white flex items-center justify-center absolute absolute--fill-l center">
+        <figure class="mv0 ml0 mr3 relative flex items-center justify-center" v-for="(photo, $index) in photos">
+          <button @click="removePhoto($index)" class="button-reset pointer dim bn bg-black h2 w2 br-100 white flex items-center justify-center absolute absolute--fill-l center">
             <i class="material-icons f5">close</i>
           </button>
-          <img v-bind:src="photo" class="photo-img" alt="Uploaded photo">
+          <img v-bind:src="photo" class="h3 w3" alt="Uploaded photo">
         </figure>
       </div>
 
-      <input @change="handlePhotoUpload" ref="photoUpload" type="file" class="hide">
+      <input multiple @change="handlePhotoUpload" ref="photoUpload" type="file" class="hide">
 
       <div class="mt3 flex justify-between">
         <div>
@@ -32,8 +32,7 @@
           <span class="mr3 black-70" v-bind:class="{ 'light-red': underTwentyMark, 'dark-red': underTenMark }">
             {{ charLeft }}
           </span>
-          <button :disabled="isTweetable" class="button-reset bg-blue bn white f6 fw5 pv2 ph3 br2 pointer dim"
-          >
+          <button :disabled="isTweetable" class="button-reset bg-blue bn white f6 fw5 pv2 ph3 br2 pointer dim">
             Tweet
           </button>
         </div>
@@ -47,7 +46,7 @@
     data: function () {
       return {
         tweet: '',
-        photo: null
+        photos: []
       }
     },
     computed: {
@@ -60,7 +59,7 @@
       },
 
       photoHasBeenUploaded: function () {
-        return !!this.photo
+        return this.photos.length > 0
       },
 
       isTweetable: function () {
@@ -77,21 +76,37 @@
       },
 
       handlePhotoUpload: function (event) {
-        var reader = new FileReader()
+        const files = event.target.files
 
-        reader.onload = (event) => {
-          this.photo = (event.target.result)
+        if (!files || files.length < 1) {
+          return
         }
 
-        reader.readAsDataURL(event.target.files[0])
+        for (let i = 0; i < files.length; i++) {
+          if (files[i]) {
+            this.uploadOnePhoto(files[i])
+          }
+        }
+      },
+
+      uploadOnePhoto: function (file) {
+        let reader = new FileReader()
+
+        reader.onloadend = (event) => {
+          if (event && event.target && event.target.result) {
+            this.photos.push(event.target.result)
+          }
+        }
+
+        reader.readAsDataURL(file)
       },
 
       triggerFileUpload: function () {
         this.$refs.photoUpload.click()
       },
 
-      removePhoto: function () {
-        this.photo = null
+      removePhoto: function (index) {
+        this.photos.splice(index, 1)
       }
     }
   }
