@@ -12,7 +12,7 @@ export default class Header extends Component {
       <div style={headerStyle}>
         <div className="navbar sticky-top navbar-expand-lg navbar-light bg-light">
           <a className="navbar-brand" href="#home">
-            <img src={logo} width="40" height="40" alt="Scribble Wall" />
+            <img src={logo} style={{ "marginTop": "-5px" }} width="38" height="38" alt="Scribble Wall" />
             Scribble Wall
           </a>
 
