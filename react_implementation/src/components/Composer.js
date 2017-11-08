@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import '../assets/Composer.css';
 
 const containerStyle = {
   "marginTop": "10px"
@@ -23,15 +24,17 @@ export default class Composer extends Component {
     this.getInnerAreaStyle = this.getInnerAreaStyle.bind(this);
   }
 
-  toggleModal() {
+  toggleModal(e) {
+    e.stopPropagation();
+    e.preventDefault();
+
     let { isOpen } = this.state;
     this.setState({ "isOpen": !isOpen });
   }
 
   getInnerAreaStyle() {
     return {
-      "display": this.state.isOpen ? "block" : "none",
-      "marginTop": "10px"
+      "display": this.state.isOpen ? "block" : "none"
     }
   }
 
