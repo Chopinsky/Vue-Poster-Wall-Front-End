@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { Link } from 'react-router-dom'
 import logo from '../assets/logo.svg';
 
 const headerStyle = {
@@ -6,7 +7,36 @@ const headerStyle = {
   color: "white"
 }
 
+const LinkEnum = {
+  Home: "home",
+  Tracker: "tracker"
+}
+
 export default class Header extends Component {
+  constructor(props) {
+    super(props);
+    this.onClickHandle = this.onClickHandle.bind(this);
+  }
+
+  getLinkStyle(link) {
+    if (this.props.activeLink === link) {
+      return "nav-item active";
+    } else {
+      return "nav-item";
+    }    
+  }
+
+  onClickHandle(event, target) {
+    event.stopPropagation();
+    event.preventDefault();
+    
+    if (this.props.onLinkClicked 
+        && typeof this.props.onLinkClicked === 'function'
+        && this.props.activeLink !== target) {
+      this.props.onLinkClicked(event.target);
+    }
+  }
+
   render() {
     return (
       <div style={headerStyle}>
@@ -22,8 +52,11 @@ export default class Header extends Component {
 
           <div className="collapse navbar-collapse" id="navbarSupportedContent">
             <ul className="navbar-nav mr-auto">
-              <li className="nav-item active">
-                <a className="nav-link" href="#home">Home <span className="sr-only">(current)</span></a>
+              <li className={this.getLinkStyle(LinkEnum.Home)}>
+                <Link to='/' className="nav-link">Home</Link>
+              </li>
+              <li className={this.getLinkStyle(LinkEnum.Tracker)}>
+                <Link to='/traker' className="nav-link">Tracker</Link>
               </li>
             </ul>
           </div>
