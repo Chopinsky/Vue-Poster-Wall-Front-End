@@ -1,6 +1,6 @@
 import { combineReducers } from 'redux';
 
-const tweetComposer = (state = {}, action) => {
+const tweetReduer = (state = {}, action) => {
   switch (action.type) {
     case 'CHAR_BELOW_TWENTY':
       return {
@@ -17,7 +17,7 @@ const tweetComposer = (state = {}, action) => {
   }
 };
 
-const tweetWall = (state = {}, action) => {
+const cryptoReducer = (state = [], action) => {
   switch (action.type) {
     case 'NEW_TWEET':
       return state;
@@ -27,6 +27,6 @@ const tweetWall = (state = {}, action) => {
 };
 
 export default combineReducers({
-  tweetComposer,
-  tweetWall
+  tweet: tweetReduer,
+  crypto: cryptoReducer
 });
