@@ -8,9 +8,6 @@ import './index.css';
 import App from './components/App';
 import Store from './store';
 
-//import { default as appRecuder } from './reducers/appReducer';
-//let store = createStore(appRecuder);
-
 ReactDOM.render(
   <Provider store={Store}>
     <Router>
