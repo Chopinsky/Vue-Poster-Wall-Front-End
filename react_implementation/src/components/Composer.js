@@ -12,6 +12,13 @@ const styles = {
     "height": "10px",
     "width": "10px",
     "marginBottom": "10px"
+  },
+  hide: {
+    "clip": "rect(1px, 1px, 1px, 1px)",
+    "height": "1px",
+    "width": "1px",
+    "overflow": "hidden",
+    "position": "absolute !important"
   }
 }
 
@@ -33,6 +40,8 @@ export default class Composer extends Component {
     this.getPhotosFrame = this.getPhotosFrame.bind(this);
     this.handleToggle = this.handleToggle.bind(this);
     this.handleTweet = this.handleTweet.bind(this);
+    this.handlePhotoUpload = this.handlePhotoUpload.bind(this);
+    this.handleUploadButtonClick = this.handleUploadButtonClick.bind(this);
   }
 
   handleToggle(event) {
@@ -48,6 +57,20 @@ export default class Composer extends Component {
     event.preventDefault();
 
     this.setState({ "tweet": event.target.value });
+  }
+
+  handlePhotoUpload(event) {
+    event.stopPropagation();
+    event.preventDefault();
+  }
+
+  handleUploadButtonClick(event) {
+    event.stopPropagation();
+    event.preventDefault();
+
+    if (this.photoUploadControl) {
+      this.photoUploadControl.click();
+    }
   }
 
   removePhoto(index) {
@@ -107,7 +130,22 @@ export default class Composer extends Component {
           
           {this.getPhotosFrame()}
 
-          <span>Composer Body</span>
+          <input 
+            multiple type="file" style={styles.hide}
+            onChange={this.handlePhotoUpload} 
+            ref={(input) => {this.photoUploadControl = input;}} 
+          />
+
+          <div class="mt3 flex justify-between">
+            <div>
+              <button 
+                onClick={this.handleUploadButtonClick} 
+                className="button-reset flex items-center br2 bn bg-transparent blue hover-bg-black-10 pointer"
+              >
+                <i class="material-icons f3">photo_camera</i>
+              </button>
+            </div>
+          </div>
 
         </div>
       </div>
