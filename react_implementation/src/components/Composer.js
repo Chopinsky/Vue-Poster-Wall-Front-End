@@ -11,14 +11,37 @@ const styles = {
   removePhoto: {
     "height": "10px",
     "width": "10px",
-    "marginBottom": "10px"
+    "marginBottom": "10px",
+    "fontFamily": "Material Icons",
+    "fontWeight": "normal",
+    "fontStyle": "normal",
+    "lineHeight": "1",
+    "letterSpacing": "normal",
+    "textTransform": "none",
+    "display": "inline-block",
+    "whiteSpace": "nowrap",
+    "wordWrap": "normal",
+    "direction": "ltr"
   },
   hide: {
     "clip": "rect(1px, 1px, 1px, 1px)",
-    "height": "1px",
-    "width": "1px",
+    "height": "0px",
+    "width": "0px",
     "overflow": "hidden",
     "position": "absolute !important"
+  },
+  materialIcon: {
+    "fontFamily": "Material Icons",
+    "fontWeight": "normal",
+    "fontStyle": "normal",
+    "fontSize": "12px",
+    "lineHeight": "1",
+    "letterSpacing": "normal",
+    "textTransform": "none",
+    "display": "inline-block",
+    "whiteSpace": "nowrap",
+    "wordWrap": "normal",
+    "direction": "ltr"
   }
 }
 
@@ -94,12 +117,12 @@ export default class Composer extends Component {
     let { photos } = this.state;
 
     if (!photos || !photos.length) {
-      return (<div>"Photos Frame"<br/></div>);
+      return;
     } else {
       const photosFrame = photos.map((photo, index) => (
         <div key={index} className="mv0 ml0 mr3 relative flex items-center justify-center">
           <button onClick={this.removePhoto.bind(this, index)} className="button-reset pointer dim bn bg-black h2 w2 br-100 white flex items-center justify-center absolute absolute--fill-l center">
-            <i className="material-icons f5" style={styles.removePhoto}>x</i>
+            <i className="f5" style={styles.removePhoto}>x</i>
           </button>
           <img className="h3 w3" src={photo} alt=""/>
         </div>
@@ -142,7 +165,7 @@ export default class Composer extends Component {
                 onClick={this.handleUploadButtonClick} 
                 className="button-reset flex items-center br2 bn bg-transparent blue hover-bg-black-10 pointer"
               >
-                <i class="material-icons f3">photo_camera</i>
+                <i className="f5" style={styles.materialIcon}>photo_camera</i>
               </button>
             </div>
           </div>
