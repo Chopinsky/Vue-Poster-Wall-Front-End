@@ -32,8 +32,8 @@ const styles = {
   },
   materialIcon: {
     "fontFamily": "Material Icons",
-    "fontWeight": "normal",
-    "fontStyle": "normal",
+    "fontWeight": "small",
+    "fontStyle": "small",
     "fontSize": "12px",
     "lineHeight": "1",
     "letterSpacing": "normal",
@@ -65,6 +65,7 @@ export default class Composer extends Component {
     this.handleTweet = this.handleTweet.bind(this);
     this.handlePhotoUpload = this.handlePhotoUpload.bind(this);
     this.handleUploadButtonClick = this.handleUploadButtonClick.bind(this);
+    this.uploadOnePhoto = this.uploadOnePhoto.bind(this);
   }
 
   handleToggle(event) {
@@ -85,6 +86,32 @@ export default class Composer extends Component {
   handlePhotoUpload(event) {
     event.stopPropagation();
     event.preventDefault();
+
+    const files = event.target.files;
+    if (!files || files.length < 1) {
+      return;
+    }
+
+    // "files" is not an array, but an object with length property,
+    // and each member has a key of 0, 1, 2, ..., length-1.
+    for (let i = 0; i < files.length; i++) {
+      if (files[i]) {
+        this.uploadOnePhoto(files[i]);
+      }
+    }
+  }
+
+  uploadOnePhoto(file) {
+    let reader = new FileReader();
+    
+    reader.onloadend = (event) => {
+      if (event && event.target && event.target.result) {
+        const photos = [...this.state.photos, event.target.result];
+        this.setState({ "photos": photos });
+      }
+    }
+
+    reader.readAsDataURL(file)
   }
 
   handleUploadButtonClick(event) {
@@ -122,7 +149,7 @@ export default class Composer extends Component {
       const photosFrame = photos.map((photo, index) => (
         <div key={index} className="mv0 ml0 mr3 relative flex items-center justify-center">
           <button onClick={this.removePhoto.bind(this, index)} className="button-reset pointer dim bn bg-black h2 w2 br-100 white flex items-center justify-center absolute absolute--fill-l center">
-            <i className="f5" style={styles.removePhoto}>x</i>
+            <span className="f5 glyphicon glyphicon-remove" style={styles.removePhoto}></span>
           </button>
           <img className="h3 w3" src={photo} alt=""/>
         </div>
@@ -159,13 +186,13 @@ export default class Composer extends Component {
             ref={(input) => {this.photoUploadControl = input;}} 
           />
 
-          <div class="mt3 flex justify-between">
+          <div className="mt3 flex justify-between">
             <div>
               <button 
                 onClick={this.handleUploadButtonClick} 
                 className="button-reset flex items-center br2 bn bg-transparent blue hover-bg-black-10 pointer"
               >
-                <i className="f5" style={styles.materialIcon}>photo_camera</i>
+                <i className="f5 glyphicon glyphicon-camera" style={styles.materialIcon}>camera</i>
               </button>
             </div>
           </div>
