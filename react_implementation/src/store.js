@@ -3,11 +3,11 @@ import promise from 'redux-promise';
 import thunk from 'redux-thunk';
 import logger from 'redux-logger';
 
-import appReducer from './reducers/AppReducer';
+import mainReduer from './reducers/MainReducer';
 
 const middleware = applyMiddleware(thunk, promise, logger);
 const Store = createStore(
-  appReducer,
+  mainReduer,
   compose(middleware)
 );
 

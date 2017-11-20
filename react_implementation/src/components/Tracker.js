@@ -14,10 +14,10 @@ class Tracker extends Component {
       "data": []
     }
 
-    this.fetchData();
+    this.fetchDataNative();
   }
 
-  fetchData() {
+  fetchDataNative() {
     jquery.get(`${Constant.apiBaseURL}/v1/ticker/?limit=10`)
           .then((res) => {
             this.setState({ "data": res });
