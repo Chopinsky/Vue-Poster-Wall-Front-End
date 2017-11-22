@@ -1,11 +1,15 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-
 import jquery from 'jquery';
-import Constant from '../service/Constants.js';
-import FetchCoinData from '../service/DataService';
-
 import TrackerHeader from './TrackerHeader';
+import Constant from '../service/Constants';
+import { FetchCoinData } from '../service/ActionService';
+
+const styles = {
+  symbols: {
+    "margin": "10px 0"
+  }
+}
 
 class Tracker extends Component {
   constructor(props) {
@@ -34,8 +38,10 @@ class Tracker extends Component {
   }
 
   renderSymbols() {
-    if (!this.props.crypto.data || !this.props.crypto.data.length) {
-      return <div>Fetching data..."</div>;
+    if (this.props.crypto.isFetching) {
+      return <div>Fetching data...</div>;
+    } else if (!this.props.crypto.data || !this.props.crypto.data.length) {
+      return <div>Unable to retrieve data...</div>;
     } else {
       return this.props.crypto.data.map((value, index) => {
         return (
@@ -51,7 +57,9 @@ class Tracker extends Component {
     return (
       <div>
         <TrackerHeader />
-        {this.renderSymbols()}
+        <div id="divContentWrapper" style={styles.symbols}>
+          {this.renderSymbols()}
+        </div>
       </div>
     );
   }
