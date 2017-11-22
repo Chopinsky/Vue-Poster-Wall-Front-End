@@ -27,23 +27,26 @@ const tweetReduer = (state = {}, action) => {
 const cryptoReducer = (state = initState, action) => {
   switch (action.type) {
     case "FETCH_COIN_DATA":
-      return Object.assign(state, {
+      return {
+        ...state,
         ...initState,
-        isFetching: true,
-      });
+        isFetching: true
+      };
 
     case "FETCH_COIN_DATA_SUCCESS":
-      return Object.assign(state, {
+      return {
+        ...state,
         ...initState,
         data: action.payload
-      });
+      };
 
     case "FETCH_COIN_DATA_FAILURE":
-      return Object.assign(state, {
+      return {
+        ...state,
         ...initState,
         hasError: true,
         errorMessage: action.payload
-      });
+      };
 
     default:
       return state;
