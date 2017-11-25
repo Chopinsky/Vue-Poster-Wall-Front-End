@@ -16,9 +16,19 @@ class Tracker extends Component {
     super(props);
 
     this.renderSymbols = this.renderSymbols.bind(this);
+    this.refreshCoinData = this.refreshCoinData.bind(this);
   }
 
   componentDidMount() {
+    this.refreshCoinData(null);
+  }
+
+  refreshCoinData(event) {
+    if (event) {
+      event.stopPropagation();
+      event.preventDefault();
+    }
+
     if (typeof this.props.FetchCoinData === 'function') {
       this.props.FetchCoinData();
     } else {
@@ -59,6 +69,9 @@ class Tracker extends Component {
         <TrackerHeader />
         <div id="divContentWrapper" style={styles.symbols}>
           {this.renderSymbols()}
+        </div>
+        <div id="btnRefresh">
+          <button type="button" onClick={this.refreshCoinData}>Refresh Coin Data</button>
         </div>
       </div>
     );
