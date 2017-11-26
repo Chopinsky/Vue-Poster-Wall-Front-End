@@ -51,6 +51,8 @@ export default class Composer extends Component {
 
     this.state = {
       "tweet": "",
+      "charLeft": 140,
+      "isTweetable": true,
       "photos": [], // ["https://static.pexels.com/photos/207962/pexels-photo-207962.jpeg"],
       "isOpen": true
     }
@@ -61,10 +63,13 @@ export default class Composer extends Component {
   initBinding() {
     this.getInnerAreaStyle = this.getInnerAreaStyle.bind(this);
     this.getPhotosFrame = this.getPhotosFrame.bind(this);
+    this.getCharLeftStyle = this.getCharLeftStyle.bind(this);
+
     this.handleToggle = this.handleToggle.bind(this);
     this.handleTweet = this.handleTweet.bind(this);
     this.handlePhotoUpload = this.handlePhotoUpload.bind(this);
     this.handleUploadButtonClick = this.handleUploadButtonClick.bind(this);
+
     this.uploadOnePhoto = this.uploadOnePhoto.bind(this);
   }
 
@@ -80,7 +85,14 @@ export default class Composer extends Component {
     event.stopPropagation();
     event.preventDefault();
 
-    this.setState({ "tweet": event.target.value });
+    const charLeft = (this.state.tweet && typeof this.state.tweet === 'string') ? (140 - this.state.tweet.length) : 140;
+    const isTweetable = (charLeft >= 0);
+
+    this.setState({ 
+      tweet: event.target.value,
+      charLeft: charLeft,
+      isTweetable: isTweetable
+    });
   }
 
   handlePhotoUpload(event) {
@@ -163,6 +175,21 @@ export default class Composer extends Component {
     }
   }
 
+  getCharLeftStyle() {
+    let style = {};
+
+    if (this.state.charLeft < 10) {
+      style["color"] = "#DC143C";
+    } else if (this.state.charLeft < 20) {
+      style["color"] = "#800000";      
+    } else {
+      style["color"] = "#0000FF";
+    }
+
+    console.log(style);
+    return style;
+  }
+
   render() {
     return (
       <div id="divContainer" style={styles.container} className="w-75 center ba b--black-10">
@@ -193,6 +220,18 @@ export default class Composer extends Component {
                 className="button-reset flex items-center br2 bn bg-transparent blue hover-bg-black-10 pointer"
               >
                 <i className="f5 glyphicon glyphicon-camera" style={styles.materialIcon}>camera</i>
+              </button>
+            </div>
+
+            <div className="flex items-center">
+              <span className="mr3 black-70" style={this.getCharLeftStyle()}>
+                {this.state.charLeft}
+              </span>
+              <button
+                type="button"
+                disabled={!this.state.isTweetable}
+                className="button-reset bg-blue bn white f6 fw5 pv2 ph3 br2 pointer dim">
+                Tweet
               </button>
             </div>
           </div>
