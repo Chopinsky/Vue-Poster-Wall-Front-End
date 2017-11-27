@@ -1,15 +1,13 @@
 export default (state = {}, action) => {
   switch (action.type) {
-    case "CHAR_BELOW_TWENTY":
+    case "POST_TWEETS":
       return {
-        ...state,
-        charCntClass: "lessThanTwenty"
+        ...state
       };
-    case "CHAR_BELOW_TEN":
+    case "LOAD_TWEETS":
       return {
-        ...state,
-        charCntClass: "lessThanTen"
-      }
+        ...state
+      };
     default:
       return state;
   }

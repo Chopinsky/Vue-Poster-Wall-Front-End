@@ -16,8 +16,14 @@ export const FetchCoinData = () => {
   }
 }
 
-export const PutTweet = () => {
+export const PostTweet = (tweet) => {
   return (dispatch) => {
-    
+    dispatch({ type: "POST_TWEETS", payload: tweet });
+  }
+}
+
+export const LoadTweets = (topic) => {
+  return (dispatch) => {
+    dispatch({ type: "LOAD_TWEETS", payload: topic });
   }
 }

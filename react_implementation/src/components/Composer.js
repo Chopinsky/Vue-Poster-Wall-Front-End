@@ -1,4 +1,7 @@
 import React, { Component } from 'react';
+import { connect } from 'react-redux';
+
+import { PostTweet, LoadTweets } from '../service/ActionService';
 import '../assets/Composer.css';
 
 const styles = {
@@ -45,19 +48,23 @@ const styles = {
   }
 }
 
-export default class Composer extends Component {
+class Composer extends Component {
   constructor(props) {
     super(props);
 
     this.state = {
       "tweet": "",
       "charLeft": 140,
-      "isTweetable": true,
+      "isTweetable": false,
       "photos": [], // ["https://static.pexels.com/photos/207962/pexels-photo-207962.jpeg"],
       "isOpen": true
     }
 
     this.initBinding();
+
+    if (typeof this.props.LoadTweets === 'function') {
+      this.props.LoadTweets();
+    }
   }
 
   initBinding() {
@@ -66,9 +73,10 @@ export default class Composer extends Component {
     this.getCharLeftStyle = this.getCharLeftStyle.bind(this);
 
     this.handleToggle = this.handleToggle.bind(this);
-    this.handleTweet = this.handleTweet.bind(this);
+    this.handleTweetInput = this.handleTweetInput.bind(this);
     this.handlePhotoUpload = this.handlePhotoUpload.bind(this);
     this.handleUploadButtonClick = this.handleUploadButtonClick.bind(this);
+    this.handleTweetSubmit = this.handleTweetSubmit.bind(this);
 
     this.uploadOnePhoto = this.uploadOnePhoto.bind(this);
   }
@@ -81,18 +89,36 @@ export default class Composer extends Component {
     this.setState({ "isOpen": !isOpen });
   }
 
-  handleTweet(event) {    
+  handleTweetInput(event) {    
     event.stopPropagation();
     event.preventDefault();
 
-    const charLeft = (this.state.tweet && typeof this.state.tweet === 'string') ? (140 - this.state.tweet.length) : 140;
-    const isTweetable = (charLeft >= 0);
+    const tweet = event.target.value;
+    const charLeft = (tweet && typeof tweet === 'string') ? (140 - tweet.length) : 140;
+    const isTweetable = (charLeft >= 0) && (charLeft < 140);
+
+    console.log()
 
     this.setState({ 
-      tweet: event.target.value,
-      charLeft: charLeft,
-      isTweetable: isTweetable
+      tweet,
+      charLeft,
+      isTweetable
     });
+  }
+
+  handleTweetSubmit(event) {
+    if (!this.state.isTweetable || !this.state.tweet) {
+      return;
+    }
+
+    event.stopPropagation();
+    event.preventDefault();
+
+    let { tweet, photos } = this.state;
+
+    if (typeof this.props.PostTweet === 'function') {
+      this.props.PostTweet({ tweet, photos });
+    }
   }
 
   handlePhotoUpload(event) {
@@ -186,7 +212,6 @@ export default class Composer extends Component {
       style["color"] = "#0000FF";
     }
 
-    console.log(style);
     return style;
   }
 
@@ -201,7 +226,7 @@ export default class Composer extends Component {
           <textarea 
             id="tweet" name="tweet" rows="3"
             className="w-100 br2 ba b--black-10 pa2"
-            value={this.state.tweet} onChange={this.handleTweet}
+            value={this.state.tweet} onChange={this.handleTweetInput}
             placeholder="Write your thoughts here" 
           />
           
@@ -230,6 +255,7 @@ export default class Composer extends Component {
               <button
                 type="button"
                 disabled={!this.state.isTweetable}
+                onClick={this.handleTweetSubmit}
                 className="button-reset bg-blue bn white f6 fw5 pv2 ph3 br2 pointer dim">
                 Tweet
               </button>
@@ -241,3 +267,12 @@ export default class Composer extends Component {
     );
   }
 }
+
+const mapStateToProps = (state) => {
+  // this will become this.props.tweet
+  return {
+    tweet: state.tweet
+  }
+}
+
+export default connect(mapStateToProps, { PostTweet, LoadTweets })(Composer);
