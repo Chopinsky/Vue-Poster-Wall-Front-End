@@ -3,6 +3,7 @@ import { connect } from 'react-redux';
 import jquery from 'jquery';
 
 import TrackerHeader from './TrackerHeader';
+import CoinCard from './CoinCard';
 import Constant from '../service/Constants';
 import { FetchCoinData } from '../service/ActionService';
 
