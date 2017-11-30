@@ -51,14 +51,14 @@ class Tracker extends Component {
 
   renderSymbols() {
     if (this.props.crypto.isFetching) {
-      return <div>Fetching data...</div>;
+      return <div style={{ "margin": "50px auto" }}>Fetching data...</div>;
     } else if (!this.props.crypto.data || !this.props.crypto.data.length) {
-      return <div>Unable to retrieve data...</div>;
+      return <div style={{ "margin": "50px auto" }}>Unable to retrieve data...</div>;
     } else {
       return this.props.crypto.data.map((value, index) => {
         return (
           <div key={index}>
-            {value.name} : ${value.price_usd} / {value.symbol} 
+            <CoinCard data={value} />
           </div>
         );
       });
