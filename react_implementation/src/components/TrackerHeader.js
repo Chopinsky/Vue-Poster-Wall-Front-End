@@ -3,15 +3,15 @@ import React, { Component } from 'react';
 const styles = {
   headerContainer: {
     display: "flex",
-    marginTop: 25,
+    marginTop: "25px",
     alignItems: "center",
   },
   header: {
     backgroundColor: "#f8f9fa",
-    padding: "10px 75px",
+    padding: "10px 170px",
     margin: "auto",
     fontWeight: "bold",
-    fontSize: 20,
+    fontSize: "20",
   }
 }
 
