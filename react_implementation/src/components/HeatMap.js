@@ -1,40 +1,77 @@
 import React, { Component } from 'react';
-import $ from 'jquery';
+import { connect } from 'react-redux';
 
-// const styles = {}
-const MAP_KEY = 'AIzaSyDLpyf4_S30etuLNrodI8umfDNkEuW9D5g';
+import { LoadLocHistory, InitMap } from '../service/HeatMapActions';
 
-export default class HeatMap extends Component {
+const styles = {
+  'mapContainer': {
+    'height': '700px', 
+    'width': '850px', 
+    'margin':'auto'
+  }
+}
+
+class HeatMap extends Component {
   constructor(props) {
     super(props);
+    
+    this.state = {
+      'map': null,
+    }
 
-    this.geo = require('../assets/history.json');
+    if (typeof this.props.LoadLocHistory === 'function') {
+      setTimeout(() => {
+        this.props.LoadLocHistory();      
+      }, 0);
+    }
 
-    if (!window.hasOwnProperty('google')) {
-      $.getScript(
-        `https://maps.googleapis.com/maps/api/js?key=${MAP_KEY}&libraries=visualization`, 
-        (data, textStatus, jqxhr) => {
-          if (jqxhr.status === 200 && window.hasOwnProperty('google')) {
-            this.googlemap = window.google.maps;
-            this.initMap();
-          }
-        }
-      );
+    if (typeof this.props.InitMap === 'function') {
+      setTimeout(() => {
+        this.props.InitMap();      
+      }, 0);
     }
 
     this.initMap = this.initMap.bind(this);
   }
 
-  initMap() {
-    // console.log(this.googlemap);
-    //this.map = new google.maps.Map(document.getElementById('map'), {center: 'SYDNEY', zoom: 12});
+  componentWillReceiveProps(nextProps) {
+    if (!this.props.heatmap.googlemaps && nextProps.heatmap.googlemaps) {
+      this.initMap(nextProps.heatmap.googlemaps);
+    }
+  }
+
+  initMap(googlemaps) {
+    var uluru = {lat: -25.363, lng: 131.044};
+    const map = new googlemaps.Map(
+      this.mapdiv, 
+      {center: uluru, zoom: 8}
+    );
+
+    const marker = new googlemaps.Marker({
+      position: uluru,
+      map: map
+    });
   }
 
   render() {
+    let { heatmap } = this.props;
     return (
-      <div id='map'>
-        {this.geo.locations[0].toString()}
+      <div id='map-container'>
+        <div 
+          id='map' 
+          style={styles.mapContainer} 
+          ref={ref => this.mapdiv = ref} 
+        />
       </div>
     );
   }
 }
+
+const mapStateToProps = (state) => {
+  // this will become this.props.heatmap
+  return {
+    heatmap: state.heatmap
+  }
+}
+
+export default connect(mapStateToProps, { LoadLocHistory, InitMap })(HeatMap);
