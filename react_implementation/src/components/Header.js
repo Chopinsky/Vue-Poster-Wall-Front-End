@@ -9,7 +9,8 @@ const headerStyle = {
 
 const LinkEnum = {
   Home: "home",
-  Tracker: "tracker"
+  Tracker: "tracker",
+  Map: "map",
 }
 
 export default class Header extends Component {
@@ -57,6 +58,9 @@ export default class Header extends Component {
               </li>
               <li className={this.getLinkStyle(LinkEnum.Tracker)}>
                 <Link to='/traker' className="nav-link">Tracker</Link>
+              </li>
+              <li className={this.getLinkStyle(LinkEnum.Map)}>
+                <Link to='/map' className="nav-link">Map</Link>
               </li>
             </ul>
           </div>

@@ -4,6 +4,7 @@ import { Switch, Route } from 'react-router-dom'
 import Header from './Header';
 import Composer from './Composer';
 import Tracker from './Tracker';
+import HeatMap from './HeatMap';
 
 const appStyle = {
   textAlign: "center"
@@ -17,6 +18,7 @@ export default class App extends Component {
         <Switch>
           <Route exact path='/' component={Composer} />
           <Route path='/traker' component={Tracker} />
+          <Route path='/map' component={HeatMap} />
         </Switch>
       </div>
     );

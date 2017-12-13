@@ -10,6 +10,7 @@
 /build
 
 # misc
+src/assets/history.json
 .DS_Store
 .env.local
 .env.development.local
