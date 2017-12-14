@@ -1,9 +1,14 @@
 import Constant from './Constants.js';
 import jquery from 'jquery';
 
-export const LoadLocHistory = () => {
+export const LoadLocHistory = (googlemaps) => {
   return (dispatch) => {  
-    const locHist = require('../assets/history.json');
+    const rawLocHist = require('../assets/history.json');
+    
+    let locHist = rawLocHist.locations.map((val) => {
+      return new googlemaps.LatLng(val.latitudeE7 * (10 ** -7), val.longtitudeE7 * (10 ** -7));
+    });
+
     dispatch({ type: 'LOAD_LOC_HIST', payload: locHist });
   }
 }

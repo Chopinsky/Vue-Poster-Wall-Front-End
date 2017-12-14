@@ -11,18 +11,18 @@ const styles = {
   }
 }
 
+const deferStateUpdates = (deferFn) => {
+  if (typeof deferFn === 'function') {
+    setTimeout(deferFn, 0);
+  }
+}
+
 class HeatMap extends Component {
   constructor(props) {
     super(props);
     
     this.state = {
-      'map': null,
-    }
-
-    if (typeof this.props.LoadLocHistory === 'function') {
-      setTimeout(() => {
-        this.props.LoadLocHistory();      
-      }, 0);
+      'mapinit': false,
     }
 
     if (typeof this.props.InitMap === 'function') {
@@ -36,32 +36,55 @@ class HeatMap extends Component {
 
   componentWillReceiveProps(nextProps) {
     if (!this.props.heatmap.googlemaps && nextProps.heatmap.googlemaps) {
-      this.initMap(nextProps.heatmap.googlemaps);
+      //this.initMap(nextProps.heatmap.googlemaps);
     }
   }
 
-  initMap(googlemaps) {
-    var uluru = {lat: -25.363, lng: 131.044};
-    const map = new googlemaps.Map(
-      this.mapdiv, 
-      {center: uluru, zoom: 8}
-    );
+  initMap() {
+    if (this.state.mapinit) return;
+
+    let { googlemaps } = this.props.heatmap;
+    if (!googlemaps) return;
+
+    //const uluru = {lat: -25.363, lng: 131.044};
+    const sf = { lat: 37.775, lng: -122.434 };
+    const map = new googlemaps.Map(this.mapdiv, {
+      center: sf, 
+      zoom: 4,
+      mapTypeId: 'roadmap'
+    });
 
     const marker = new googlemaps.Marker({
-      position: uluru,
+      position: sf,
       map: map
     });
+
+    deferStateUpdates(() => {      
+      this.setState({
+        'mapinit': true
+      }, () => this.loadLocHist());
+    });
+  }
+
+  loadLocHist() {       
+    if (typeof this.props.LoadLocHistory === 'function' 
+        && !this.props.heatmap.locHist) {
+      let { googlemaps } = this.props.heatmap;
+      this.props.LoadLocHistory(googlemaps);
+    }
   }
 
   render() {
     let { heatmap } = this.props;
     return (
       <div id='map-container'>
-        <div 
+        { heatmap.googlemaps ? this.initMap() : "Loading..." }
+        <div
           id='map' 
           style={styles.mapContainer} 
-          ref={ref => this.mapdiv = ref} 
+          ref={ref => this.mapdiv = ref}
         />
+        { heatmap.locHist ? heatmap.locHist.length : 0}
       </div>
     );
   }
