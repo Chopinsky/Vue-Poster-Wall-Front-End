@@ -4,16 +4,11 @@ import jquery from 'jquery';
 export const LoadLocHistory = (googlemaps) => {
   return (dispatch) => {  
     const rawLocHist = require('../assets/history.json');
-    
-    let locHist = rawLocHist.locations.map((val) => {
-      return new googlemaps.LatLng(val.latitudeE7 * (10 ** -7), val.longtitudeE7 * (10 ** -7));
-    });
-
-    dispatch({ type: 'LOAD_LOC_HIST', payload: locHist });
+    dispatch({ type: 'LOAD_LOC_HIST', payload: rawLocHist.locations });
   }
 }
 
-export const InitMap = () => {
+export const LoadMap = () => {
   return (dispatch) => {
     if (!window.hasOwnProperty('google')) {
       jquery
