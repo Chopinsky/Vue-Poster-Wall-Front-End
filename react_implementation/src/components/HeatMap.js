@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 
-import { LoadLocHistory, LoadMap } from '../service/HeatMapActions';
+import { LoadLocHistory, LoadMap, LoadEarthquake } from '../service/HeatMapActions';
 
 const styles = {
   'mapContainer': {
@@ -64,6 +64,12 @@ class HeatMap extends Component {
         this.props.LoadLocHistory();
       });
     }
+
+    if (typeof this.props.LoadEarthquake === 'function') {
+      deferStateUpdates(() => {
+        this.props.LoadEarthquake();
+      });
+    }
   }
 
   componentWillReceiveProps(nextProps) {
@@ -124,8 +130,8 @@ class HeatMap extends Component {
     let { periodstart, periodend } = this.state;
 
     let start, end;
-    if (periodstart) start = new Date(parseInt(periodstart)).toDateString();
-    if (periodend) end = new Date(parseInt(periodend)).toDateString();
+    if (periodstart) start = new Date(parseInt(periodstart, 10)).toDateString();
+    if (periodend) end = new Date(parseInt(periodend, 10)).toDateString();
 
     return (
       <div id='map-container'>
@@ -150,4 +156,4 @@ const mapStateToProps = (state) => {
   }
 }
 
-export default connect(mapStateToProps, { LoadLocHistory, LoadMap })(HeatMap);
+export default connect(mapStateToProps, { LoadLocHistory, LoadMap, LoadEarthquake })(HeatMap);

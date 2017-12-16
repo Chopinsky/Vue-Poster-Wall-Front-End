@@ -10,6 +10,12 @@ export default (state = {}, action) => {
         ...state,
         'googlemaps': action.payload
       };
+    case 'EARTHQUAKE':
+      return {
+        ...state,
+        'earthquake': action.payload,
+        'earthquake_meta': action.meta
+      }
     default:
       return state;
   }

@@ -27,3 +27,15 @@ export const LoadMap = () => {
 
   }
 }
+
+export const LoadEarthquake = (version) => {
+  return (dispatch) => {
+    const geoInfo = version ? version : '4.5_month';
+    jquery
+      .get(`${Constant.USGS_URL}/${geoInfo}.geojson`, (data, textStatus) => {
+        if (textStatus === 'success') {
+          dispatch({ type: 'EARTHQUAKE', payload: data.features, meta: data.metadata });
+        }
+      });
+  }
+}
