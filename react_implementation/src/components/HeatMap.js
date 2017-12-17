@@ -1,18 +1,22 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 
-import { LoadLocHistory, LoadMap, LoadEarthquake } from '../service/HeatMapActions';
+import { 
+  LoadLocHistory, 
+  LoadMap, 
+  LoadEarthquake 
+} from '../service/HeatMapActions';
 
 const styles = {
   'mapContainer': {
     'height': '700px', 
-    'width': '850px', 
-    'margin': 'auto'
+    'width': '850px',
+    'margin': '-10px auto'
   },
   'title': {
-    'height': '30px',
+    'height': '100%',
     'width': '100%',
-    'margin': '10px auto'
+    'margin': '0 auto'
   }
 }
 
@@ -45,8 +49,6 @@ class HeatMap extends Component {
     
     this.state = {
       'heatmap': null,
-      'periodstart': null,
-      'periodend': null,
     }
 
     this.initMap = this.initMap.bind(this);
@@ -79,7 +81,8 @@ class HeatMap extends Component {
   }
 
   initMap() {
-    if (this.state.heatmap) return;
+    if (this.state.timerange) 
+      return (<span> {this.state.timerange} </span>);
 
     let { googlemaps, locHist } = this.props.heatmap;
     if (!googlemaps) return;
@@ -116,28 +119,32 @@ class HeatMap extends Component {
       opacity: 0.5
     });
 
+    const start = new Date(parseInt(locHist[locHist.length-1].timestampMs, 10)).toDateString();
+    const end = new Date(parseInt(locHist[0].timestampMs, 10)).toDateString();
+    const timerange = `Time range: ${start} ~ ${end}`
+
     deferStateUpdates(() => {
       this.setState({ 
         'heatmap': heatmap,
-        'periodstart': locHist[locHist.length-1].timestampMs,
-        'periodend': locHist[0].timestampMs,
-      });
+        'timerange': timerange,
+       });
     });
+
+    return (
+      <span> {timerange} </span>
+    );
   }
 
   render() {
     let { heatmap } = this.props;
     let { periodstart, periodend } = this.state;
 
-    let start, end;
-    if (periodstart) start = new Date(parseInt(periodstart, 10)).toDateString();
-    if (periodend) end = new Date(parseInt(periodend, 10)).toDateString();
-
     return (
       <div id='map-container'>
-        <div style={styles.title}>
-          { heatmap.googlemaps ? this.initMap() : "Loading..." }
-          { start && end ? `Time range: ${start} ~ ${end}` : "" }
+        <div style={styles.title} >
+          <div className="alert alert-info" >
+            { heatmap.googlemaps ? this.initMap() : "Loading..." }
+          </div>
         </div>
         <div
           id='map' 
