@@ -43,18 +43,20 @@ const deferStateUpdates = (deferFn) => {
   }
 }
 
+const mapTypeEnum = {
+  history: 'history',
+  earthquake: 'earthquake',
+}
+
 class HeatMap extends Component {
   constructor(props) {
     super(props);
     
     this.state = {
       'heatmap': null,
+      'mapType': mapTypeEnum.history,
     }
-
-    this.initMap = this.initMap.bind(this);
-  }
-
-  componentWillMount() {
+    
     if (typeof this.props.LoadMap === 'function') {
       deferStateUpdates(() => {
         this.props.LoadMap();      
@@ -67,20 +69,24 @@ class HeatMap extends Component {
       });
     }
 
-    if (typeof this.props.LoadEarthquake === 'function') {
-      deferStateUpdates(() => {
-        this.props.LoadEarthquake();
-      });
-    }
+    this.initHistoryMap = this.initHistoryMap.bind(this);
+    this.renderMapTitle = this.renderMapTitle.bind(this);
+    this.refreshEarthquakeData = this.refreshEarthquakeData.bind(this);
   }
 
   componentWillReceiveProps(nextProps) {
     if (!this.props.heatmap.googlemaps && nextProps.heatmap.googlemaps) {
-      //this.initMap(nextProps.heatmap.googlemaps);
+      //this.initHistoryMap(nextProps.heatmap.googlemaps);
     }
   }
 
-  initMap() {
+  refreshEarthquakeData() {
+    if (typeof this.props.LoadEarthquake === 'function') {
+      this.props.LoadEarthquake();
+    }
+  }
+
+  initHistoryMap() {
     if (this.state.timerange) 
       return (<span> {this.state.timerange} </span>);
 
@@ -129,22 +135,34 @@ class HeatMap extends Component {
         'timerange': timerange,
        });
     });
+  }
 
-    return (
-      <span> {timerange} </span>
-    );
+  initEarthquakeMap() {
+    let { googlemaps, earthquake } = this.props.heatmap;
+    const data = earthquake.map(({geometry}) => {
+      return new googlemaps.LatLng(geometry.coordinates.longitude, geometry.coordinates.latitude);
+    });
+    
+  }
+
+  renderMapTitle() {
+    let { timerange } = this.state;
+
+    if (timerange) {
+      return (<span> {timerange} </span>);
+    } else {
+      this.initHistoryMap();
+      return (<span> Loading... </span>)
+    }
   }
 
   render() {
     let { heatmap } = this.props;
-    let { periodstart, periodend } = this.state;
 
     return (
       <div id='map-container'>
         <div style={styles.title} >
-          <div className="alert alert-info" >
-            { heatmap.googlemaps ? this.initMap() : "Loading..." }
-          </div>
+          <div className="alert alert-info" > { this.renderMapTitle() } </div>
         </div>
         <div
           id='map' 
