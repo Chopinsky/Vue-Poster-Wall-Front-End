@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
+import {RadioButton, RadioButtonGroup} from 'material-ui/RadioButton';
 
 import { 
   LoadLocHistory, 
@@ -72,6 +73,7 @@ class HeatMap extends Component {
     this.initHistoryMap = this.initHistoryMap.bind(this);
     this.renderMapTitle = this.renderMapTitle.bind(this);
     this.refreshEarthquakeData = this.refreshEarthquakeData.bind(this);
+    this.onMapDataSourceChanged = this.onMapDataSourceChanged.bind(this);
   }
 
   componentWillReceiveProps(nextProps) {
@@ -142,7 +144,11 @@ class HeatMap extends Component {
     const data = earthquake.map(({geometry}) => {
       return new googlemaps.LatLng(geometry.coordinates.longitude, geometry.coordinates.latitude);
     });
-    
+
+  }
+
+  onMapDataSourceChanged(event, value) {
+
   }
 
   renderMapTitle() {
@@ -163,6 +169,8 @@ class HeatMap extends Component {
       <div id='map-container'>
         <div style={styles.title} >
           <div className="alert alert-info" > { this.renderMapTitle() } </div>
+          <RadioButtonGroup name="map-data" onChange={this.onMapDataSourceChanged} defaultSelected="not_light">
+          </RadioButtonGroup>
         </div>
         <div
           id='map' 
