@@ -1,43 +1,38 @@
 export default class Trie {
-  constructor(key, value) {
-    this._value =value;
-    this._key = key;
-    this._children = [];
+  constructor() {
+    this.value = "";
+    this._children = {};
   }
 
-  get value() {
-    return this._value;
+  addChild(key, child) {
+    if (key && child) {
+      this._children[key] = child;
+    }
   }
 
-  set value(val) {
-    throw Error("Trie node's stored value can not be changed");
-  }
+  getChild(key) {
+    if (key && this._children.hasOwnProperty(key)) {
+      return this._children[key];
+    }
 
-  get key() {
-    return this._key;
-  }
-
-  set key() {
-    throw Error("Trie node's stored key can not be changed");
-  }
-
-  addChild(child) {
-
+    return null;
   }
 
   collect() {
     let result = [];
 
-    if (this._value) {
-      result.push(this._value);
+    if (this.value) {
+      result.push(this.value);
     }
 
-    this._children.forEach((child) => {
-      let childCollection = child.collect();
-      if (childCollection && childCollection.length > 0) {
-        result.push(...childCollection);
+    for (const key in this._children) {
+      if (this._children.hasOwnProperty(key)) {
+        const childCollection = this._children[key].collect();
+        if (childCollection && childCollection.length > 0) {
+          result.push(...childCollection);
+        }
       }
-    });
+    }
 
     return result;
   }
@@ -46,24 +41,23 @@ export default class Trie {
     let result = [];
     limit = limit < 5 ? 5 : limit;
 
-    if (this._value) {
-      result.push(this._value);
+    if (this.value) {
+      result.push(this.value);
       count += 1;
     }
     
-    let index = 0;
-    while(count < limit && index < this._children.length) {
-      let childCollection = this._children[index].collectWithLimit(count, limit);
-
-      if (count + childCollection.length > limit) {
-        result.push(...childCollection.slice(0, limit - count));
-        break;
-      } else {
-        result.push(...childCollection);
-        count += childCollection.length;
+    for (const key in this._children) {
+      if (this._children.hasOwnProperty(key)) {
+        const childCollection = this._children[key].collectWithLimit(count, limit);
+        
+        if (count + childCollection.length > limit) {
+          result.push(...childCollection.slice(0, limit - count));
+          break;
+        } else if (childCollection && childCollection.length > 0) {
+          result.push(...childCollection);
+          count += childCollection.length;
+        }
       }
-
-      index += 1;
     }
 
     return result;
