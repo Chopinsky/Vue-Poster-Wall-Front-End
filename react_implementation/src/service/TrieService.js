@@ -1,8 +1,6 @@
 import Trie from './Trie';
 
-const root = new Trie();
-
-export function find(str) {
+const findInTrie = (root, str) => {
   if (typeof str !== 'string' || str.length === 0) {
     return [""];
   }
@@ -12,7 +10,7 @@ export function find(str) {
 
   while (index < str.length && node) {
     var key = str.charAt(index);
-    childNode = node.getChild(key);
+    var childNode = node.getChild(key);
     
     if (childNode) {
       node = childNode;
@@ -28,7 +26,7 @@ export function find(str) {
   return [...node.collect()];
 }
 
-export function insert(str) {
+const insertToTrie = (root, str) => {
   if (typeof str !== 'string' || str.length === 0) {
     return;
   }
@@ -54,10 +52,59 @@ export function insert(str) {
   node.value = str;
 }
 
-export function getTrie() {
-  return root;
+export default class TrieService {
+  constructor() {
+    this.root = new Trie();
+  }
+
+  suggest = (str) => {
+    if (!this.root) {
+      return [];
+    }
+
+    return findInTrie(this.root, str);
+  }
+
+  insert = (str) => {
+    if (!this.root) {
+      this.root = new Trie();
+    }
+
+    insertToTrie(this.root, str);
+  }
+
+  reset = () => {
+    this.root = new Trie();
+  }
 }
 
-export function clearTrie() {
-  root = new Trie();
+function permuteAbstract(arr, n) {
+  if (n === 0) {
+    console.log(arr);
+  } else {
+    for (var i = 0; i <= n; i++) {
+      permuteAbstract(arr, n-1);
+      swap(arr, n % 2 === 0 ? i : 0, n);
+    }
+  }
+}
+
+function permuteSimple(arr, n) {
+  if (n === 0) {
+    console.log(arr);
+  } else {
+    for (let i = 0; i <= n; i++) {
+      // needs to keep arr immutable so we don't have to restore it 
+      // after each permute
+      const carry = [...arr];
+      const last = carry.splice(i, 1);
+      permuteSimple([...carry, ...last], n-1);
+    }
+  }
+}
+
+function swap(arr, i, j) {
+  var temp = arr[i];
+  arr[i] = arr[j];
+  arr[j] = temp;
 }

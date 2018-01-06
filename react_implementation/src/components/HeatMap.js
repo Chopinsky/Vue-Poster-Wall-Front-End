@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import {RadioButton, RadioButtonGroup} from 'material-ui/RadioButton';
+// import {RadioButton, RadioButtonGroup} from 'material-ui/RadioButton';
 
 import { 
   LoadLocHistory, 
@@ -18,6 +18,9 @@ const styles = {
     'height': '100%',
     'width': '100%',
     'margin': '0 auto'
+  },
+  'input': {
+    margin: '10px 0'
   }
 }
 
@@ -56,6 +59,7 @@ class HeatMap extends Component {
     this.state = {
       'heatmap': null,
       'mapType': mapTypeEnum.history,
+      'checked': 'footprint',
     }
     
     if (typeof this.props.LoadMap === 'function') {
@@ -169,8 +173,11 @@ class HeatMap extends Component {
       <div id='map-container'>
         <div style={styles.title} >
           <div className="alert alert-info" > { this.renderMapTitle() } </div>
-          <RadioButtonGroup name="map-data" onChange={this.onMapDataSourceChanged} defaultSelected="not_light">
-          </RadioButtonGroup>
+          <div style={styles.input}>
+            <input type="radio" id="choice1" name="contact" value="My Footprint" 
+              checked={this.state.checked === 'footprint'} />
+            <label for="choice1">My Footprint</label>
+          </div>
         </div>
         <div
           id='map' 

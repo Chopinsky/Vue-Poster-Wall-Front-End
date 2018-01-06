@@ -3,3 +3,57 @@ body {
   padding: 0;
   font-family: sans-serif;
 }
+
+html {
+  font-family: sans-serif;
+}
+
+label {
+  margin-right: 15px;
+  margin-left: 5px;
+  line-height: 32px;
+}
+
+input {
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+
+  border-radius: 50%;
+  width: 16px;
+  height: 16px;
+
+  border: 2px solid #999;
+  transition: 0.2s all linear;
+  outline: none;
+  margin-right: 5px;
+  margin-bottom: 10px;
+
+  position: relative;
+  top: 5px;
+}
+
+input:checked {
+  border: 6px solid black;
+}
+
+button,
+legend {
+  color: white;
+  background-color: black;
+  padding: 5px 10px;
+  border-radius: 0;
+  border: 0;
+  font-size: 14px;
+}
+
+button:hover,
+button:focus {
+  color: #999;
+}
+
+button:active {
+  background-color: white;
+  color: black;
+  outline: 1px solid black;
+}
